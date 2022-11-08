@@ -6,15 +6,58 @@ const heartButton = document.querySelector("#heart");
 const pauseButton = document.querySelector("#pause");
 const submitButton = document.querySelector("#submit");
 const commentList = document.querySelector("#list")
+const commentInput = document.querySelector("#comment-input");
+const likeList = document.querySelector(".likes");
 
 // set interval functions and event listeners
-const timerIntervalID = setInterval(increaseTimerEverySecond, 1000);
+let timerIntervalID = setInterval(increaseTimerEverySecond, 1000);
 minusButton.addEventListener("click", removeOneFromTimer);
 plusButton.addEventListener("click", addOneToTimer);
-pauseButton.addEventListener("click", pauseTimer);
+pauseButton.addEventListener("click", pauseResumeTimer);
+submitButton.addEventListener("click", addComment);
 
-function pauseTimer() {
-    clearInterval(timerIntervalID);
+// disables all buttons except for play/pause
+function disableButtons() {
+    minusButton.disabled = true;
+    plusButton.disabled = true;
+    heartButton.disabled = true;
+    submitButton.disabled = true;
+}
+
+// enables all buttons except for play/pause
+function enableButtons() {
+    minusButton.disabled = false;
+    plusButton.disabled = false;
+    heartButton.disabled = false;
+    submitButton.disabled = false;
+}
+
+// pauses and plays the timer depending on button text. updates text accordingly
+function pauseResumeTimer() {
+    if (pauseButton.textContent === " pause ") {
+        if (timerIntervalID) {
+            clearInterval(timerIntervalID);
+            timerIntervalID = null;
+            pauseButton.textContent = " resume ";
+            disableButtons();
+        }
+    }
+    else if (pauseButton.textContent === " resume ") {
+        if (!timerIntervalID) {
+            timerIntervalID = setInterval(increaseTimerEverySecond, 1000);
+            pauseButton.textContent = " pause ";
+            enableButtons();
+        }
+    }
+}
+
+// creates a new comment and adds it to the DOM
+function addComment(event) {
+    event.preventDefault();
+    const newComment = document.createElement("p");
+    newComment.textContent = commentInput.value;
+    commentList.appendChild(newComment);
+    commentInput.value = "";
 }
 
 // increases timer every second
