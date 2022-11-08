@@ -15,6 +15,31 @@ minusButton.addEventListener("click", removeOneFromTimer);
 plusButton.addEventListener("click", addOneToTimer);
 pauseButton.addEventListener("click", pauseResumeTimer);
 submitButton.addEventListener("click", addComment);
+heartButton.addEventListener("click", manageLike);
+
+function manageLike() {
+    const counterNum = counter.textContent;
+    const likes = document.querySelector(".likes");
+    const arrLikes = [...likes.children];
+    const elementLi = arrLikes.find(item => {
+        if (item.id === counterNum) {
+            return item.id;
+        }
+        else {
+            return null;
+        }
+    })
+    if (elementLi) {
+        let spanLi = document.getElementById(`s${counterNum}`);
+        elementLi.innerHTML = `${counterNum} has been liked <span id=s${counterNum}>${++spanLi.innerText}</span> times`;
+    }
+    else {
+       let li = document.createElement("li");
+       li.innerHTML = `${counterNum} has been liked <span id=s${counterNum}>1</span> time`;
+       li.id = counterNum;
+       likes.appendChild(li);
+    }
+}
 
 // disables all buttons except for play/pause
 function disableButtons() {
@@ -71,6 +96,9 @@ function increaseTimerEverySecond() {
 function removeOneFromTimer() {
     let counterValue = parseInt(counter.textContent);
     counterValue -= 1;
+    if (counterValue <= 0) {
+        counterValue = 0;
+    }
     counter.textContent = counterValue;
 }
 
